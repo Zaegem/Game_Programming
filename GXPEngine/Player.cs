@@ -1,17 +1,25 @@
-﻿
+﻿using System;
+using GXPEngine.Core;
 
 namespace GXPEngine
 {
     class Player : AnimationSprite
     {
+        public Vec2 position
+        {
+            get
+            {
+                return _position;
+            }
+        }
 
         LevelManager levelManager;
+        private Vec2 _position;
+        public Vec2 velocity;
         int counter;
         int frame;
         int jumpPower = 5;
-        int speed = 1;
-
-        //test
+        float speed = 0;
 
         public Player(LevelManager levelManager) : base("assets/Run.png", 12, 1)
         {
@@ -22,41 +30,46 @@ namespace GXPEngine
 
         void Update()
         {
+            PlayerMovement();
+            PlayerAnimation();
+
+        }
+
+        void PlayerMovement()
+        {
+            if (Input.GetKey(Key.W))
+            {
+                if (speed < 5)
+                {
+                    speed += 1;
+                }
+                else
+                {
+                    if (speed > 0)
+                    {
+                        speed -= 0.1f;
+                    }
+                }
+
+            }
+
+            velocity *= speed;
+            _position += velocity;
+        }
+
+        void PlayerAnimation()
+        {
             counter++;
 
-            if(counter > 10)
+            if (counter > 10)
             {
                 counter = 0;
                 frame++;
-                if(frame == frameCount)
+                if (frame == frameCount)
                 {
                     frame = 0;
                 }
                 SetFrame(frame);
-            }
-
-            //moving
-            if (Input.GetKey(Key.W))
-            {
-                Move(0, -5);
-            } else
-            {
-                MoveUntilCollision(0, 5);
-            }
-
-            if (Input.GetKey(Key.S))
-            {
-                MoveUntilCollision(0, speed);
-            }
-
-            if (Input.GetKey(Key.A))
-            {
-                MoveUntilCollision(-speed, 0);
-            }
-
-            if (Input.GetKey(Key.D))
-            {
-                MoveUntilCollision(speed, 0);
             }
         }
     }

@@ -3,7 +3,7 @@ using System.Drawing;
 
 public class UI_Manager : GameObject
 {
-    Sprite test;
+    Sprite HealthBar;
 
     public UI_Manager()
     {

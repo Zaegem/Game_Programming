@@ -86,6 +86,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="UI_Manager.cs" />
+    <Compile Include="Vec2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -6,6 +6,7 @@ public class MyGame : Game {
 
 	LevelManager levelManager;
 	Player player;
+    private float offSet = 490;
 
 	public MyGame() : base(320, 240, false, false, 980, 720, true)  
 	{
@@ -30,12 +31,12 @@ public class MyGame : Game {
         Console.WriteLine("I hate this");
 		float boundarySize = 36;
 
-        if (player.x + player.width + boundarySize >= levelManager.LevelPosition.x + width && Input.GetKey(Key.D))
+        if (player.x + player.width + boundarySize >= levelManager.LevelPosition.x && Input.GetKey(Key.D))
         {
 			levelManager.Move(-1, 0);
         }
 
-		if(player.x - boundarySize <= levelManager.LevelPosition.x && Input.GetKey(Key.A))
+		if(player.x - boundarySize <= levelManager.LevelPosition.x + 490 && Input.GetKey(Key.A))
 		{
 			levelManager.Move(1, 0);
 		}
