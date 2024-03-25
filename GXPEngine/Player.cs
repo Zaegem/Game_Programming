@@ -1,9 +1,21 @@
-﻿namespace GXPEngine
+using System;
+using GXPEngine.Core;
+
+namespace GXPEngine
 {
     class Player : AnimationSprite
     {
+        public Vec2 position
+        {
+            get
+            {
+                return _position;
+            }
+        }
 
         LevelManager levelManager;
+        private Vec2 _position;
+        public Vec2 velocity;
         int counter;
         int frame;
 
