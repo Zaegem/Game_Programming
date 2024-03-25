@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bullet.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
     <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="UI_Manager.cs" />
+    <Compile Include="Vec2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

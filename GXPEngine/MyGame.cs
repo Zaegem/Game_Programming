@@ -6,19 +6,22 @@ public class MyGame : Game {
 
 	LevelManager levelManager;
 	Player player;
+    static MyGame game;
+
+    public static MyGame GetGame()
+    {
+        return game;
+    }
 
 	public MyGame() : base(320, 240, false, false, 980, 720, true)  
 	{
+        EasyDraw canvas = new EasyDraw(800, 600);
 		levelManager = new LevelManager(this);
 		levelManager.CreateLevel();
-        Console.WriteLine("Hello World!");
-
-        EasyDraw canvas = new EasyDraw(800, 600);
         //SoundHandler.test.play(1, 0);
 
-		player = new Player(levelManager);
+		player = new Player(levelManager, new Vec2(width / 2, height / 2));
 		AddChild(player);
-		player.SetXY(width / 2, height / 2);
 	}
 
 	void Update() {
@@ -27,15 +30,14 @@ public class MyGame : Game {
 
     void Scroll()
     {
-        Console.WriteLine("I hate this");
 		float boundarySize = 36;
 
-        if (player.x + player.width + boundarySize >= levelManager.LevelPosition.x + width && Input.GetKey(Key.D))
+        if (player.x + player.width + boundarySize >= levelManager.LevelPosition.x && Input.GetKey(Key.D))
         {
 			levelManager.Move(-1, 0);
         }
 
-		if(player.x - boundarySize <= levelManager.LevelPosition.x && Input.GetKey(Key.A))
+		if(player.x - boundarySize <= levelManager.LevelPosition.x + 490 && Input.GetKey(Key.A))
 		{
 			levelManager.Move(1, 0);
 		}
