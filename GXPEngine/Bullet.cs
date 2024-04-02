@@ -2,35 +2,35 @@
 
 class Bullet : GameObject
 {
-    public Vec2 position;
-
     private int radius;
 
-    public Bullet(Vec2 position, int radius = 5)
+    private EasyDraw sprite;
+
+    public Bullet(int radius = 5)
     {
-        this.position = position;
         this.radius = radius;
+
+        sprite = new EasyDraw(radius, radius);
+        sprite.SetOrigin(radius / 2f, radius / 2f);
+        sprite.SetXY(x, y);
+        AddChild(sprite);
     }
 
     void Update()
     {
-
+        sprite.Ellipse(0, 0, radius, radius);
+        // write movement code
+        // write collision check
     }
 
-    public void SpawnBullet(float x, float y)
+    public bool IsColliding()
     {
-        MyGame game = MyGame.GetGame();
-        EasyDraw bullet = new EasyDraw(radius, radius);
-        game.AddChild(bullet);
-        bullet.SetOrigin(radius/2, radius/2);
-        bullet.SetXY(x, y);
-        bullet.Ellipse(0, 0, radius, radius);
-        GameObject[] collisions = bullet.GetCollisions();
-        foreach (GameObject obj in collisions)
-        {
+        //GameObject[] collisions = bullet.GetCollisions();
+        //foreach (GameObject obj in collisions)
+        //{
 
-        }
+        //}
 
-        bullet.LateDestroy();
+        return false;
     }
 }

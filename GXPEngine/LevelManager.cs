@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using GXPEngine.Core;
+using Rectangle = GXPEngine.Core.Rectangle;
 
 namespace GXPEngine
 {
     class LevelManager
     {
-        public Vector2 LevelPosition = new Vector2(0, 0);
+        public Vector2 levelPosition = new Vector2(0, 0);
 
         int tileSize = 18;
         List<Sprite> tiles = new List<Sprite>();
@@ -33,6 +36,7 @@ namespace GXPEngine
         };
 
         private MyGame game;
+        Player player;
 
         public LevelManager(MyGame game)
         {
@@ -72,6 +76,13 @@ namespace GXPEngine
             }
         }
 
+        public void Update()
+        {
+
+
+            //FollowPlayer();
+        }
+
         public void CreateLevel()
         {
             for (int y = 0; y < level.GetLength(0); y++)
@@ -97,17 +108,26 @@ namespace GXPEngine
             }
         }
 
-        public void Move(float x, float y)
+        public void SpawnPlayer()
+        {
+            player = new Player(new Vec2(160, 50));
+            game.AddChild(player);
+
+            Camera camera = new Camera((int)levelPosition.x, (int)levelPosition.y, 320, 240);
+            player.AddChild(camera);
+        }
+
+        private void MoveLevel(float x, float y)
         {
             for(int i = 0; i < levelSprites.Count; i++)
             {
                 Sprite sprite = levelSprites[i];
 
-                sprite.Move(x, y);
+                sprite.Move(-x, -y);
             }
 
-            LevelPosition.x += x;
-            LevelPosition.y += y;
+            levelPosition.x -= x;
+            levelPosition.y -= y;
         }
     }
 }

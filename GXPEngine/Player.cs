@@ -1,35 +1,29 @@
 using System;
+using System.Collections.Generic;
 using GXPEngine.Core;
 
 namespace GXPEngine
 {
     class Player : AnimationSprite
     {
-        LevelManager levelManager;
         int counter;
         int frame;
 
         private float speed = 320;
         private float jumpForce = 8;
+        private float drag = 0.05f;
+        private float characterMass = 40f;
 
-        // gravity is a vector, because it signifies a force applied at a direction 
         private Vec2 gravity = new Vec2(0, 9.81f);
-
-        //public Vec2 velocity;
-        //Vec2 _velocity = new Vec2(1, 1);
-
-        //test
-
         private Vec2 velocity;
 
         private bool isFalling = true;
 
-        private float drag = 0.05f;
-        private float characterMass = 40f;
 
-        public Player(LevelManager levelManager, Vec2 position) : base("assets/Run.png", 12, 1)
+        private List<Bullet> bullets = new List<Bullet>();
+
+        public Player(Vec2 position) : base("assets/Run.png", 12, 1)
         {
-            this.levelManager = levelManager;
             x = position.x;
             y = position.y;
 
@@ -42,41 +36,16 @@ namespace GXPEngine
             Animation();
         }
 
+        void SpawnBullet(float x, float y)
+        {
+            Bullet bullet = new Bullet();
+            game.AddChild(bullet);
+            bullet.SetXY(x, y);
+            bullets.Add(bullet);
+        }
+
         void Movement()
         {
-            ////moving
-            //if (Input.GetKey(Key.W))
-            //{
-
-
-            //    if (speed < 5)
-            //    {
-            //        speed += 2.5f;
-            //    }
-            //    else
-            //    {
-            //        if (speed > 0)
-            //        {
-            //            speed -= 1f;
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    MoveUntilCollision(0, gravity);
-            //}
-
-
-            //velocity.y *= speed;
-            //_position.y += velocity.y;
-            //Console.WriteLine(" " + y);
-
-
-            // you don't want to set the position directly
-            // you wanna use MoveUntilCollision to move always
-            // because that also does collision checking for you
-            // if you set the position directly, you will go through the colliders
-
             if (!isFalling && Input.GetKeyDown(Key.W))
             {
                 velocity += new Vec2(0, -1) * jumpForce;
@@ -95,9 +64,6 @@ namespace GXPEngine
 
             Vec2 acceleration = direction * speed * Time.deltaTimeSeconds;
             velocity = velocity * (1f - drag) + acceleration * drag;
-
-
-            Console.WriteLine($"velocity: {velocity}");
 
             Collision collision = MoveUntilCollision(velocity.x, velocity.y);
             isFalling = collision == null;

@@ -4,11 +4,12 @@ using GXPEngine;
 
 public class MyGame : Game
 {
-
     LevelManager levelManager;
-    Player player;
+    static Player player;
     static MyGame game;
 
+    
+    
     public static MyGame GetGame()
     {
         return game;
@@ -19,30 +20,13 @@ public class MyGame : Game
         EasyDraw canvas = new EasyDraw(800, 600);
         levelManager = new LevelManager(this);
         levelManager.CreateLevel();
+        levelManager.SpawnPlayer();
         //SoundHandler.test.play(1, 0);
-
-        player = new Player(levelManager, new Vec2(width / 2f, 0f));
-        AddChild(player);
     }
 
     void Update()
     {
-        Scroll();
-    }
-
-    void Scroll()
-    {
-        float boundarySize = 36;
-
-        //if (player.x + player.width + boundarySize >= levelManager.LevelPosition.x && Input.GetKey(Key.D))
-        //{
-        //    levelManager.Move(-1, 0);
-        //}
-
-        //if (player.x - boundarySize <= levelManager.LevelPosition.x + 490 && Input.GetKey(Key.A))
-        //{
-        //    levelManager.Move(1, 0);
-        //}
+        levelManager.Update();
     }
     static void Main()
     {
