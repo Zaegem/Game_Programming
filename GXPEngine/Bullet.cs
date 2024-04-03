@@ -32,7 +32,7 @@ class Bullet : GameObject
         GameObject[] collisions = bullet.GetCollisions();
         foreach (GameObject obj in collisions)
         {
-            DeleteBullet();
+
         }
 
         return false;
