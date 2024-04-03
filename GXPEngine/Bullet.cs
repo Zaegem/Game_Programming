@@ -1,36 +1,50 @@
-﻿using GXPEngine;
+﻿using System.Drawing;
+using GXPEngine;
 
 class Bullet : GameObject
 {
     private int radius;
+    private int bulletSpeed = 2;
 
-    private EasyDraw sprite;
+    private EasyDraw bullet;
 
-    public Bullet(int radius = 5)
+    public Bullet(int radius = 8)
     {
         this.radius = radius;
 
-        sprite = new EasyDraw(radius, radius);
-        sprite.SetOrigin(radius / 2f, radius / 2f);
-        sprite.SetXY(x, y);
-        AddChild(sprite);
+        bullet = new EasyDraw(radius * 2, radius * 2);
+        bullet.Fill(255, 165, 128);
+        bullet.ShapeAlign(CenterMode.Min, CenterMode.Min);
+        bullet.Stroke(Color.Black);
+        bullet.Ellipse(0, 0, radius, radius);
+        bullet.SetXY(x, y);
+        AddChild(bullet);
     }
 
     void Update()
     {
-        sprite.Ellipse(0, 0, radius, radius);
-        // write movement code
-        // write collision check
+        Move();
+        IsColliding();
     }
 
     public bool IsColliding()
     {
-        //GameObject[] collisions = bullet.GetCollisions();
-        //foreach (GameObject obj in collisions)
-        //{
-
-        //}
+        GameObject[] collisions = bullet.GetCollisions();
+        foreach (GameObject obj in collisions)
+        {
+            DeleteBullet();
+        }
 
         return false;
+    }
+
+    void Move()
+    {
+        Move(bulletSpeed, 0);
+    }
+
+    void DeleteBullet()
+    {
+        LateDestroy();
     }
 }
