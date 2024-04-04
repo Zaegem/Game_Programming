@@ -34,7 +34,7 @@ class Player : GameObject
 
     private List<Bullet> bullets = new List<Bullet>();
 
-    public Player(Vec2 position)
+    public Player(Vec2 position) : base(true)
     {
         x = position.x;
         y = position.y;

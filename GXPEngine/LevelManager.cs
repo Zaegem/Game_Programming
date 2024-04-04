@@ -107,7 +107,6 @@ namespace GXPEngine
                 }
             }
         }
-
         public void SpawnPlayer()
         {
             player = new Player(new Vec2(160, 50));
