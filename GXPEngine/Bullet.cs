@@ -1,50 +1,44 @@
 ﻿using System.Drawing;
 using GXPEngine;
+using GXPEngine.Core;
 
 class Bullet : GameObject
 {
     private int radius;
     private int bulletSpeed = 2;
 
-    private EasyDraw bullet;
+    private bool isColliding = false;
+
+    Sprite sprite = new Sprite("assets/Bullet.png");
 
     public Bullet(int radius = 8)
     {
         this.radius = radius;
 
-        bullet = new EasyDraw(radius * 2, radius * 2);
-        bullet.Fill(255, 165, 128);
-        bullet.ShapeAlign(CenterMode.Min, CenterMode.Min);
-        bullet.Stroke(Color.Black);
-        bullet.Ellipse(0, 0, radius, radius);
-        bullet.SetXY(x, y);
-        AddChild(bullet);
+        AddChild(sprite);
     }
 
     void Update()
     {
         Move();
-        IsColliding();
     }
 
-    public bool IsColliding()
+    protected override Collider createCollider()
     {
-        GameObject[] collisions = bullet.GetCollisions();
-        foreach (GameObject obj in collisions)
-        {
-
-        }
-
-        return false;
+        BoxCollider boxCollider = new BoxCollider(sprite);
+        boxCollider.isTrigger = true;
+        return boxCollider;
     }
 
     void Move()
     {
-        Move(bulletSpeed, 0);
+        MoveUntilCollision(bulletSpeed, 0);
     }
 
-    void DeleteBullet()
+    void CheckCollision()
     {
-        LateDestroy();
+        Collision collision = MoveUntilCollision(x, y);
+        isColliding = collision != null;
+
     }
 }

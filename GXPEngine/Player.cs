@@ -4,9 +4,14 @@ using GXPEngine.Core;
 using GXPEngine;
 public enum PlayerState
 {
-    Idle,
+    IdleRight,
+    IdleLeft,
     MovingRight,
-    MovingLeft
+    MovingLeft,
+    JumpRight,
+    JumpLeft,
+    FallRight,
+    FallLeft
 }
 class Player : GameObject
 {
@@ -23,11 +28,17 @@ class Player : GameObject
     private Vec2 velocity;
 
     private bool isFalling = true;
+    private bool isLookingLeft = false;
 
     AnimationSprite currentAnimation;
-    AnimationSprite idleAnimationSprite =  new AnimationSprite("assets/idleRight.png", 11, 1);
+    AnimationSprite idleRightAnimationSprite =  new AnimationSprite("assets/idleRight.png", 11, 1);
+    AnimationSprite idleLeftAnimationSprite = new AnimationSprite("assets/idleLeft.png", 11, 1);
     AnimationSprite moveRightAnimationSprite = new AnimationSprite("assets/RunRight.png", 12, 1);
     AnimationSprite moveLeftAnimationSprite = new AnimationSprite("assets/RunLeft.png", 12, 1);
+    AnimationSprite jumpRightAnimationSprite = new AnimationSprite("assets/JumpRight.png", 1, 1);
+    AnimationSprite jumpLeftAnimationSprite = new AnimationSprite("assets/JumpLeft.png", 1, 1);
+    AnimationSprite fallRightAnimationSprite = new AnimationSprite("assets/FallRight.png", 1, 1);
+    AnimationSprite fallLeftAnimationSprite = new AnimationSprite("assets/FallLeft.png", 1, 1);
 
     public PlayerState playerState;
 
@@ -41,16 +52,29 @@ class Player : GameObject
 
         scale = 0.75f;
 
-        playerState = PlayerState.Idle;
+        AddChild(idleRightAnimationSprite);
+        idleRightAnimationSprite.visible = false;
 
-        AddChild(idleAnimationSprite);
-        idleAnimationSprite.visible = false;
+        AddChild(idleLeftAnimationSprite);
+        idleLeftAnimationSprite.visible = false;
 
         AddChild(moveRightAnimationSprite);
         moveRightAnimationSprite.visible = false;
 
         AddChild(moveLeftAnimationSprite);
         moveLeftAnimationSprite.visible = false;
+
+        AddChild(jumpRightAnimationSprite);
+        jumpRightAnimationSprite.visible = false;
+
+        AddChild(jumpLeftAnimationSprite);
+        jumpLeftAnimationSprite.visible = false;
+
+        AddChild(fallRightAnimationSprite);
+        fallRightAnimationSprite.visible = false;
+
+        AddChild(fallLeftAnimationSprite);
+        fallLeftAnimationSprite.visible = false;
 
     }
 
@@ -75,7 +99,7 @@ class Player : GameObject
 
     protected override Collider createCollider()
     {
-        return new BoxCollider(idleAnimationSprite);
+        return new BoxCollider(idleRightAnimationSprite);
     }
 
     void Movement()
@@ -83,10 +107,14 @@ class Player : GameObject
         if (!isFalling && Input.GetKeyDown(Key.W))
         {
             velocity += new Vec2(0, -1) * jumpForce;
-        }
-        else
-        {
-            playerState = PlayerState.Idle;
+
+            if(isLookingLeft)
+            {
+                playerState = PlayerState.JumpLeft;
+            } else
+            {
+                playerState = PlayerState.JumpRight;
+            }
         }
 
         Vec2 direction = new Vec2(0, 0);
@@ -94,13 +122,16 @@ class Player : GameObject
         {
             direction += new Vec2(-1, 0);
             playerState = PlayerState.MovingLeft;
+            isLookingLeft = true;
         }
 
         if (Input.GetKey(Key.D))
         {
             direction += new Vec2(1, 0);
             playerState = PlayerState.MovingRight;
+            isLookingLeft = false;
         }
+
 
         Vec2 acceleration = direction * speed * Time.deltaTimeSeconds;
         velocity = velocity * (1f - drag) + acceleration * drag;
@@ -116,6 +147,7 @@ class Player : GameObject
         {
             velocity.y = 0;
         }
+
     }
 
     void Animation()
@@ -123,8 +155,11 @@ class Player : GameObject
         AnimationSprite prevAnimation = currentAnimation;
         switch (playerState)
         {
-            case PlayerState.Idle:
-                currentAnimation = idleAnimationSprite;
+            case PlayerState.IdleRight:
+                currentAnimation = idleRightAnimationSprite;
+                break;
+            case PlayerState.IdleLeft:
+                currentAnimation = idleLeftAnimationSprite;
                 break;
             case PlayerState.MovingRight:
                 currentAnimation = moveRightAnimationSprite;
@@ -132,9 +167,31 @@ class Player : GameObject
             case PlayerState.MovingLeft:
                 currentAnimation = moveLeftAnimationSprite;
                 break;
+            case PlayerState.JumpRight:
+                currentAnimation = jumpRightAnimationSprite;
+                break;
+            case PlayerState.JumpLeft:
+                currentAnimation = jumpLeftAnimationSprite;
+                break;
+            case PlayerState.FallRight:
+                currentAnimation = jumpLeftAnimationSprite;
+                break;
+            case PlayerState.FallLeft:
+                currentAnimation = jumpLeftAnimationSprite;
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
+
+        if(isLookingLeft)
+        {
+            playerState = PlayerState.IdleLeft;
+        } else
+        {
+            playerState = PlayerState.IdleRight;
+        }
+
+
 
         if (currentAnimation != prevAnimation)
         {
@@ -144,11 +201,6 @@ class Player : GameObject
             }
 
             currentAnimation.visible = true;
-        }
-
-        if (!Input.GetKey(Key.D) && !Input.GetKey(Key.A))
-        {
-            playerState = PlayerState.Idle;
         }
 
         if (counter >= 6)
