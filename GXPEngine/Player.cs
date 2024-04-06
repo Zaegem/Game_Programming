@@ -24,10 +24,10 @@ class Player : GameObject
 
     private bool isFalling = true;
 
-    AnimationSprite currentAnimation = null;
-    AnimationSprite idleAnimationSprite;
-    AnimationSprite moveRightAnimationSprite;
-    AnimationSprite moveLeftAnimationSprite;
+    AnimationSprite currentAnimation;
+    AnimationSprite idleAnimationSprite =  new AnimationSprite("assets/idleRight.png", 11, 1);
+    AnimationSprite moveRightAnimationSprite = new AnimationSprite("assets/RunRight.png", 12, 1);
+    AnimationSprite moveLeftAnimationSprite = new AnimationSprite("assets/RunLeft.png", 12, 1);
 
     public PlayerState playerState;
 
@@ -43,15 +43,12 @@ class Player : GameObject
 
         playerState = PlayerState.Idle;
 
-        idleAnimationSprite = new AnimationSprite("assets/idle.png", 11, 1);
         AddChild(idleAnimationSprite);
         idleAnimationSprite.visible = false;
 
-        moveRightAnimationSprite = new AnimationSprite("assets/RunRight.png", 12, 1);
         AddChild(moveRightAnimationSprite);
         moveRightAnimationSprite.visible = false;
 
-        moveLeftAnimationSprite = new AnimationSprite("assets/RunLeft.png", 12, 1);
         AddChild(moveLeftAnimationSprite);
         moveLeftAnimationSprite.visible = false;
 
@@ -74,6 +71,11 @@ class Player : GameObject
             bullet.SetXY(x, y);
             bullets.Add(bullet);
         }
+    }
+
+    protected override Collider createCollider()
+    {
+        return new BoxCollider(idleAnimationSprite);
     }
 
     void Movement()
@@ -149,7 +151,7 @@ class Player : GameObject
             playerState = PlayerState.Idle;
         }
 
-        if (counter > 5)
+        if (counter >= 6)
         {
             counter = 0;
             if (frame == currentAnimation.frameCount)
