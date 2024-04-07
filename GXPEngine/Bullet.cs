@@ -1,20 +1,23 @@
-﻿using System.Drawing;
+﻿using System;
 using GXPEngine;
 using GXPEngine.Core;
 
 class Bullet : GameObject
 {
+    public event Action<Bullet> OnDestroyed;
+
     private int radius;
-    private int bulletSpeed = 2;
+    private float bulletSpeed = 2f;
 
     private bool isColliding = false;
 
     Sprite sprite = new Sprite("assets/Bullet.png");
 
-    public Bullet(int radius = 8)
+    public Bullet(int radius = 8) : base(true)
     {
         this.radius = radius;
 
+        sprite.collider.isTrigger = true;
         AddChild(sprite);
     }
 
@@ -32,7 +35,17 @@ class Bullet : GameObject
 
     void Move()
     {
-        MoveUntilCollision(bulletSpeed, 0);
+        Collision collision = MoveUntilCollision(bulletSpeed, 0f);
+
+        if (collision != null)
+        {
+            LateDestroy();
+
+            if (OnDestroyed != null)
+            {
+                OnDestroyed.Invoke(this);
+            }
+        }
     }
 
     void CheckCollision()

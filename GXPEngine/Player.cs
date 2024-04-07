@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using GXPEngine.Core;
 using GXPEngine;
 public enum PlayerState
@@ -31,7 +32,7 @@ class Player : GameObject
     private bool isLookingLeft = false;
 
     AnimationSprite currentAnimation;
-    AnimationSprite idleRightAnimationSprite =  new AnimationSprite("assets/idleRight.png", 11, 1);
+    AnimationSprite idleRightAnimationSprite = new AnimationSprite("assets/idleRight.png", 11, 1);
     AnimationSprite idleLeftAnimationSprite = new AnimationSprite("assets/idleLeft.png", 11, 1);
     AnimationSprite moveRightAnimationSprite = new AnimationSprite("assets/RunRight.png", 12, 1);
     AnimationSprite moveLeftAnimationSprite = new AnimationSprite("assets/RunLeft.png", 12, 1);
@@ -52,30 +53,40 @@ class Player : GameObject
 
         scale = 0.75f;
 
-        AddChild(idleRightAnimationSprite);
         idleRightAnimationSprite.visible = false;
+        idleRightAnimationSprite.collider.isTrigger = true;
+        AddChild(idleRightAnimationSprite);
 
-        AddChild(idleLeftAnimationSprite);
         idleLeftAnimationSprite.visible = false;
+        idleLeftAnimationSprite.collider.isTrigger = true;
+        AddChild(idleLeftAnimationSprite);
 
-        AddChild(moveRightAnimationSprite);
         moveRightAnimationSprite.visible = false;
+        moveRightAnimationSprite.collider.isTrigger = true;
+        AddChild(moveRightAnimationSprite);
 
-        AddChild(moveLeftAnimationSprite);
         moveLeftAnimationSprite.visible = false;
+        moveLeftAnimationSprite.collider.isTrigger = true;
+        AddChild(moveLeftAnimationSprite);
 
-        AddChild(jumpRightAnimationSprite);
         jumpRightAnimationSprite.visible = false;
+        jumpRightAnimationSprite.collider.isTrigger = true;
+        AddChild(jumpRightAnimationSprite);
 
-        AddChild(jumpLeftAnimationSprite);
+
         jumpLeftAnimationSprite.visible = false;
+        jumpLeftAnimationSprite.collider.isTrigger = true;
+        AddChild(jumpLeftAnimationSprite);
 
-        AddChild(fallRightAnimationSprite);
+
         fallRightAnimationSprite.visible = false;
+        fallRightAnimationSprite.collider.isTrigger = true;
+        AddChild(fallRightAnimationSprite);
 
-        AddChild(fallLeftAnimationSprite);
+
         fallLeftAnimationSprite.visible = false;
-
+        fallLeftAnimationSprite.collider.isTrigger = true;
+        AddChild(fallLeftAnimationSprite);
     }
 
     void Update()
@@ -87,51 +98,54 @@ class Player : GameObject
 
     void SpawnBullet(float x, float y)
     {
-        if (Input.GetKeyUp(Key.SPACE))
+        if(Input.GetKeyUp(Key.SPACE))
         {
 
             Bullet bullet = new Bullet();
-            game.AddChild(bullet);
             bullet.SetXY(x, y);
+
+            bullet.OnDestroyed += OnBulletDestroyed;
+
+            game.AddChild(bullet);
             bullets.Add(bullet);
         }
     }
 
+    private void OnBulletDestroyed(Bullet bullet)
+    {
+        bullet.OnDestroyed -= OnBulletDestroyed;
+        bullets.Remove(bullet);
+    }
+
     protected override Collider createCollider()
     {
-        return new BoxCollider(idleRightAnimationSprite);
+        BoxCollider boxCollider = new BoxCollider(idleRightAnimationSprite);
+        boxCollider.isTrigger = true;
+        return boxCollider;
     }
 
     void Movement()
     {
-        if (!isFalling && Input.GetKeyDown(Key.W))
+        if(!isFalling && Input.GetKeyDown(Key.W))
         {
             velocity += new Vec2(0, -1) * jumpForce;
-
-            if(isLookingLeft)
-            {
-                playerState = PlayerState.JumpLeft;
-            } else
-            {
-                playerState = PlayerState.JumpRight;
-            }
+            playerState = PlayerState.JumpRight;
         }
 
         Vec2 direction = new Vec2(0, 0);
-        if (Input.GetKey(Key.A))
+        if(Input.GetKey(Key.A))
         {
             direction += new Vec2(-1, 0);
             playerState = PlayerState.MovingLeft;
             isLookingLeft = true;
         }
 
-        if (Input.GetKey(Key.D))
+        if(Input.GetKey(Key.D))
         {
             direction += new Vec2(1, 0);
             playerState = PlayerState.MovingRight;
             isLookingLeft = false;
         }
-
 
         Vec2 acceleration = direction * speed * Time.deltaTimeSeconds;
         velocity = velocity * (1f - drag) + acceleration * drag;
@@ -139,21 +153,30 @@ class Player : GameObject
         Collision collision = MoveUntilCollision(velocity.x, velocity.y);
         isFalling = collision == null;
 
-        if (isFalling)
+        if(isFalling)
         {
             velocity += gravity * drag * characterMass * Time.deltaTimeSeconds;
-        }
-        else
+        } else
         {
             velocity.y = 0;
         }
 
+        if(velocity.Length() <= 0.3f)
+        {
+            if(isLookingLeft)
+            {
+                playerState = PlayerState.IdleLeft;
+            } else
+            {
+                playerState = PlayerState.IdleRight;
+            }
+        }
     }
 
     void Animation()
     {
         AnimationSprite prevAnimation = currentAnimation;
-        switch (playerState)
+        switch(playerState)
         {
             case PlayerState.IdleRight:
                 currentAnimation = idleRightAnimationSprite;
@@ -183,19 +206,9 @@ class Player : GameObject
                 throw new ArgumentOutOfRangeException();
         }
 
-        if(isLookingLeft)
+        if(currentAnimation != prevAnimation)
         {
-            playerState = PlayerState.IdleLeft;
-        } else
-        {
-            playerState = PlayerState.IdleRight;
-        }
-
-
-
-        if (currentAnimation != prevAnimation)
-        {
-            if (prevAnimation != null)
+            if(prevAnimation != null)
             {
                 prevAnimation.visible = false;
             }
@@ -203,10 +216,10 @@ class Player : GameObject
             currentAnimation.visible = true;
         }
 
-        if (counter >= 6)
+        if(counter >= 6)
         {
             counter = 0;
-            if (frame == currentAnimation.frameCount)
+            if(frame >= currentAnimation.frameCount)
             {
                 frame = 0;
             }
