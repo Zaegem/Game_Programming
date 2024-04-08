@@ -7,15 +7,16 @@ class Bullet : GameObject
     public event Action<Bullet> OnDestroyed;
 
     private int radius;
-    private float bulletSpeed = 2f;
+    private float bulletSpeed;
 
-    private bool isColliding = false;
+    bool isColliding = false;
 
     Sprite sprite = new Sprite("assets/Bullet.png");
 
-    public Bullet(int radius = 8) : base(true)
+    public Bullet(float bulletSpeed, int radius = 8) : base(true)
     {
         this.radius = radius;
+        this.bulletSpeed = bulletSpeed;
 
         sprite.collider.isTrigger = true;
         AddChild(sprite);
@@ -46,12 +47,5 @@ class Bullet : GameObject
                 OnDestroyed.Invoke(this);
             }
         }
-    }
-
-    void CheckCollision()
-    {
-        Collision collision = MoveUntilCollision(x, y);
-        isColliding = collision != null;
-
     }
 }

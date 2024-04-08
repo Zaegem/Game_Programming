@@ -12,7 +12,9 @@ public enum PlayerState
     JumpRight,
     JumpLeft,
     FallRight,
-    FallLeft
+    FallLeft,
+    TakingDamageRight,
+    TakingDamageLeft
 }
 class Player : GameObject
 {
@@ -40,9 +42,11 @@ class Player : GameObject
     AnimationSprite jumpLeftAnimationSprite = new AnimationSprite("assets/JumpLeft.png", 1, 1);
     AnimationSprite fallRightAnimationSprite = new AnimationSprite("assets/FallRight.png", 1, 1);
     AnimationSprite fallLeftAnimationSprite = new AnimationSprite("assets/FallLeft.png", 1, 1);
+    AnimationSprite takingDamageRightAnimationSprite = new AnimationSprite("assets/HitRight.png", 7, 1);
+    AnimationSprite takingDamageLeftAnimationSprite = new AnimationSprite("assets/HitLeft.png", 7, 1);
 
-    public PlayerState playerState;
-
+    public PlayerState playerState; 
+     
 
     private List<Bullet> bullets = new List<Bullet>();
 
@@ -100,8 +104,8 @@ class Player : GameObject
     {
         if(Input.GetKeyUp(Key.SPACE))
         {
-
-            Bullet bullet = new Bullet();
+            float bulletSpeed = isLookingLeft ? -2 : 2;
+            Bullet bullet = new Bullet(bulletSpeed);
             bullet.SetXY(x, y);
 
             bullet.OnDestroyed += OnBulletDestroyed;
@@ -129,13 +133,22 @@ class Player : GameObject
         if(!isFalling && Input.GetKeyDown(Key.W))
         {
             velocity += new Vec2(0, -1) * jumpForce;
-            playerState = PlayerState.JumpRight;
+            if (isLookingLeft)
+            {
+                playerState = PlayerState.JumpLeft;
+            }
+            else
+            {
+                playerState = PlayerState.JumpRight;
+            }
+            
         }
 
         Vec2 direction = new Vec2(0, 0);
         if(Input.GetKey(Key.A))
         {
             direction += new Vec2(-1, 0);
+            if(!Input.GetKeyDown(Key.W)) 
             playerState = PlayerState.MovingLeft;
             isLookingLeft = true;
         }
@@ -201,6 +214,12 @@ class Player : GameObject
                 break;
             case PlayerState.FallLeft:
                 currentAnimation = jumpLeftAnimationSprite;
+                break;
+            case PlayerState.TakingDamageRight:
+                currentAnimation = takingDamageRightAnimationSprite;
+                break;
+            case PlayerState.TakingDamageLeft:
+                currentAnimation = takingDamageLeftAnimationSprite;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
