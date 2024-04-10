@@ -85,8 +85,11 @@
     <Compile Include="GXPEngine\FMOD\FMODSoundSystem.cs" />
     <Compile Include="GXPEngine\SoLoud\Soloud.cs" />
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
+    <Compile Include="PlantEnemy.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerBullet.cs" />
     <Compile Include="SoundManager.cs" />
+    <Compile Include="TrunkEnemy.cs" />
     <Compile Include="UI_Manager.cs" />
     <Compile Include="Vec2.cs" />
   </ItemGroup>

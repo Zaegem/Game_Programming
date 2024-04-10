@@ -40,8 +40,8 @@ class Player : GameObject
     AnimationSprite moveLeftAnimationSprite = new AnimationSprite("assets/RunLeft.png", 12, 1);
     AnimationSprite jumpRightAnimationSprite = new AnimationSprite("assets/JumpRight.png", 1, 1);
     AnimationSprite jumpLeftAnimationSprite = new AnimationSprite("assets/JumpLeft.png", 1, 1);
-    AnimationSprite fallRightAnimationSprite = new AnimationSprite("assets/FallRight.png", 1, 1);
-    AnimationSprite fallLeftAnimationSprite = new AnimationSprite("assets/FallLeft.png", 1, 1);
+    AnimationSprite fallRightAnimationSprite = new AnimationSprite("assets/FallRight.png", 1, 1); // not in use
+    AnimationSprite fallLeftAnimationSprite = new AnimationSprite("assets/FallLeft.png", 1, 1);  // not in use
     AnimationSprite takingDamageRightAnimationSprite = new AnimationSprite("assets/HitRight.png", 7, 1);
     AnimationSprite takingDamageLeftAnimationSprite = new AnimationSprite("assets/HitLeft.png", 7, 1);
 

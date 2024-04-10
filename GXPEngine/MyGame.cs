@@ -21,6 +21,8 @@ public class MyGame : Game
         levelManager = new LevelManager(this);
         levelManager.CreateLevel();
         levelManager.SpawnPlayer();
+        levelManager.SpawnPlantEnemy();
+        levelManager.SpawnTrunkEnemy();
         //SoundHandler.test.play(1, 0);
     }
 

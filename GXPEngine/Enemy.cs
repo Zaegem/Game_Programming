@@ -20,20 +20,21 @@ internal class Enemy : GameObject
         x = position.x;
         y = position.y;
 
-        attackAnimationSprite.visible = false;
-        attackAnimationSprite.collider.isTrigger = true;
-        AddChild(attackAnimationSprite);
-
-        TakeDamageAnimationSprite.visible = false;
-        TakeDamageAnimationSprite.collider.isTrigger = true;
-        AddChild(TakeDamageAnimationSprite);
-
-        IdleAnimationSprite.visible = false;
-        IdleAnimationSprite.collider.isTrigger = true;
-        AddChild(IdleAnimationSprite);
+        enemyState = EnemyState.Idle;
     }
 
     public virtual void Update()
+    {
+        Move();
+        Animation();
+    }
+
+    public virtual void Move()
+    {
+
+    }
+
+    public virtual void Kill()
     {
 
     }
@@ -65,6 +66,5 @@ internal class Enemy : GameObject
 
             currentAnimation.visible = true;
         }
-
     }
 }

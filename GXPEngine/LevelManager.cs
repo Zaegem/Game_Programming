@@ -36,7 +36,9 @@ namespace GXPEngine
         };
 
         private MyGame game;
-        Player player;
+        private Player player; 
+        private PlantEnemy plantEnemy;
+        private TrunkEnemy trunkEnemy;
 
         public LevelManager(MyGame game)
         {
@@ -114,6 +116,18 @@ namespace GXPEngine
 
             Camera camera = new Camera((int)levelPosition.x, (int)levelPosition.y, 320, 240);
             player.AddChild(camera);
+        }
+
+        public void SpawnPlantEnemy()
+        {
+            plantEnemy = new PlantEnemy(new Vec2(300, 120));
+            game.AddChild(plantEnemy);
+        }
+
+        public void SpawnTrunkEnemy()
+        {
+            trunkEnemy = new TrunkEnemy(new Vec2(420, 95));
+            game.AddChild(trunkEnemy);
         }
 
         private void MoveLevel(float x, float y)
