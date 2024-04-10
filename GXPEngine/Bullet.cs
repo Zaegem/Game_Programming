@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using GXPEngine;
 using GXPEngine.Core;
 
@@ -6,19 +7,18 @@ class Bullet : GameObject
 {
     public event Action<Bullet> OnDestroyed;
 
-    private int radius;
+    private const int radius = 8;
     private float bulletSpeed;
 
     bool isColliding = false;
 
-    Sprite sprite = new Sprite("assets/Bullet.png");
+    private Sprite sprite;
 
-    public Bullet(float bulletSpeed, int radius = 8) : base(true)
+    public Bullet(Sprite sprite, float bulletSpeed) : base(true)
     {
-        this.radius = radius;
         this.bulletSpeed = bulletSpeed;
+        this.sprite = sprite;
 
-        sprite.collider.isTrigger = true;
         AddChild(sprite);
     }
 
@@ -29,7 +29,10 @@ class Bullet : GameObject
 
     protected override Collider createCollider()
     {
-        BoxCollider boxCollider = new BoxCollider(sprite);
+        Bitmap bitmap = new Bitmap(radius, radius);
+        Sprite colliderSprite = new Sprite(bitmap, false);
+        AddChild(colliderSprite);
+        BoxCollider boxCollider = new BoxCollider(colliderSprite);
         boxCollider.isTrigger = true;
         return boxCollider;
     }
@@ -37,6 +40,8 @@ class Bullet : GameObject
     void Move()
     {
         Collision collision = MoveUntilCollision(bulletSpeed, 0f);
+
+        Console.WriteLine($"collision: {collision != null}");
 
         if (collision != null)
         {

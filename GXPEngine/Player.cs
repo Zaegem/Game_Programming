@@ -105,7 +105,7 @@ class Player : GameObject
         if(Input.GetKeyUp(Key.SPACE))
         {
             float bulletSpeed = isLookingLeft ? -2 : 2;
-            Bullet bullet = new Bullet(bulletSpeed);
+            Bullet bullet = new Bullet(new Sprite("assets/Bullet.png", true, false), bulletSpeed);
             bullet.SetXY(x, y);
 
             bullet.OnDestroyed += OnBulletDestroyed;

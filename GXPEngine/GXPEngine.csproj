@@ -87,7 +87,6 @@
     <Compile Include="GXPEngine\SoLoud\SoloudSoundSystem.cs" />
     <Compile Include="PlantEnemy.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayerBullet.cs" />
     <Compile Include="SoundManager.cs" />
     <Compile Include="TrunkEnemy.cs" />
     <Compile Include="UI_Manager.cs" />

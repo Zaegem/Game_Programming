@@ -27,9 +27,15 @@ internal class Enemy : GameObject
     {
         Move();
         Animation();
+        SpawnBullet();
     }
 
     public virtual void Move()
+    {
+
+    }
+
+    public virtual void SpawnBullet()
     {
 
     }
