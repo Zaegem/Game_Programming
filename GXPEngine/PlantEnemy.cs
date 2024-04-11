@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq.Expressions;
 using GXPEngine;
+using GXPEngine.Core;
 internal class PlantEnemy : Enemy
 {
     private List<Bullet> enemyBullets = new List<Bullet>();
@@ -10,6 +14,12 @@ internal class PlantEnemy : Enemy
     private int bulletSpeed = -2;
     private int offSetY = 10;
     private int offSetX = -8;
+
+    private int width = 44;
+    private int height = 42;
+
+    private bool hasShot = false;
+
     public PlantEnemy(Vec2 position) : base(position)
     {
         attackAnimationSprite = new AnimationSprite("assets/PlantAttack.png", 8, 1);
@@ -17,16 +27,18 @@ internal class PlantEnemy : Enemy
         attackAnimationSprite.collider.isTrigger = true;
         AddChild(attackAnimationSprite);
 
-        TakeDamageAnimationSprite = new AnimationSprite("assets/PlantHit.png", 5, 1);
-        TakeDamageAnimationSprite.visible = false;
-        TakeDamageAnimationSprite.collider.isTrigger = true;
-        AddChild(TakeDamageAnimationSprite);
+
+        takeDamageAnimationSprite = new AnimationSprite("assets/PlantHit.png", 5, 1);
+        takeDamageAnimationSprite.visible = false;
+        takeDamageAnimationSprite.collider.isTrigger = true;
+        AddChild(takeDamageAnimationSprite);
 
         IdleAnimationSprite = new AnimationSprite("assets/PlantIdle.png", 11, 1);
         IdleAnimationSprite.visible = false;
         IdleAnimationSprite.collider.isTrigger = true;
         AddChild(IdleAnimationSprite);
     }
+
 
     public void Update()
     {
@@ -40,16 +52,23 @@ internal class PlantEnemy : Enemy
     }
 
     public override void SpawnBullet(float x, float y)
-    {   
-        if (frame == 5)
+    {
+        if(frame == 5)
         {
-            Bullet bullet = new Bullet(new Sprite("assets/PlantBullet.png", true, false), bulletSpeed);
-            bullet.SetXY(x, y);
+            if(!hasShot)
+            {
+                Bullet bullet = new Bullet(new Sprite("assets/PlantBullet.png", true, false), bulletSpeed);
+                bullet.SetXY(x, y);
 
-            bullet.OnDestroyed += OnBulletDestroyed;
+                bullet.OnDestroyed += OnBulletDestroyed;
 
-            game.AddChild(bullet);
-            enemyBullets.Add(bullet);
+                game.AddChild(bullet);
+                enemyBullets.Add(bullet);
+                hasShot = true;
+            }
+        } else
+        {
+            hasShot = false;
         }
     }
 
@@ -62,10 +81,10 @@ internal class PlantEnemy : Enemy
     public override void Animation()
     {
         base.Animation();
-        if (counter >= animationSpeed)
+        if(counter >= animationSpeed)
         {
             counter = 0;
-            if (frame >= currentAnimation.frameCount)
+            if(frame >= currentAnimation.frameCount)
             {
                 frame = 0;
             }
@@ -75,5 +94,15 @@ internal class PlantEnemy : Enemy
         counter++;
     }
 
+    protected override Collider createCollider()
+    {
+        float desiredWidth = width / 2f;
+        float desiredHeight = height / 2f;
+        Bitmap bitmap = new Bitmap((int)desiredWidth, (int)desiredHeight);
+        Sprite colliderSprite = new Sprite(bitmap, false);
+        AddChild(colliderSprite);
+        colliderSprite.SetXY(desiredWidth / 2f, desiredHeight / 2f);
+        BoxCollider boxCollider = new BoxCollider(colliderSprite);
+        return boxCollider;
+    }
 }
-

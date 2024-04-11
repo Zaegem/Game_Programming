@@ -13,7 +13,7 @@ internal class Enemy : GameObject
 
     protected AnimationSprite currentAnimation;
     protected AnimationSprite attackAnimationSprite;
-    protected AnimationSprite TakeDamageAnimationSprite;
+    protected AnimationSprite takeDamageAnimationSprite;
     protected AnimationSprite IdleAnimationSprite;
     public Enemy(Vec2 position) : base(true)
     {
@@ -47,7 +47,7 @@ internal class Enemy : GameObject
                 currentAnimation = attackAnimationSprite;
                 break;
             case EnemyState.TakeDamage:
-                currentAnimation = TakeDamageAnimationSprite;
+                currentAnimation = takeDamageAnimationSprite;
                 break;
             case EnemyState.Idle:
                 currentAnimation = IdleAnimationSprite;

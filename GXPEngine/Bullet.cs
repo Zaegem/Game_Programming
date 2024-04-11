@@ -41,8 +41,6 @@ class Bullet : GameObject
     {
         Collision collision = MoveUntilCollision(bulletSpeed, 0f);
 
-        Console.WriteLine($"collision: {collision != null}");
-
         if (collision != null)
         {
             LateDestroy();
