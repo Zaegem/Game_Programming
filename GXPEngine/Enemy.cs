@@ -20,14 +20,12 @@ internal class Enemy : GameObject
         x = position.x;
         y = position.y;
 
-        enemyState = EnemyState.Idle;
+        enemyState = EnemyState.Attack;
     }
 
-    public virtual void Update()
+    public virtual void Kill()
     {
-        Move();
-        Animation();
-        SpawnBullet();
+
     }
 
     public virtual void Move()
@@ -35,12 +33,7 @@ internal class Enemy : GameObject
 
     }
 
-    public virtual void SpawnBullet()
-    {
-
-    }
-
-    public virtual void Kill()
+    public virtual void SpawnBullet(float x, float y)
     {
 
     }

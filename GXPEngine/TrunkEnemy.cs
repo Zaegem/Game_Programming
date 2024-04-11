@@ -2,27 +2,33 @@
 using System.Diagnostics;
 using System.Reflection;
 
-    internal class TrunkEnemy : Enemy
-    {
-        private int counter;
-        private int frame;
+internal class TrunkEnemy : Enemy
+{
+    private int counter;
+    private int frame;
+    private int animationSpeed = 6;
     public TrunkEnemy(Vec2 position) : base(position)
-        {
-            attackAnimationSprite = new AnimationSprite("assets/TrunkAttack.png", 11, 1);
-            attackAnimationSprite.visible = false;
-            attackAnimationSprite.collider.isTrigger = true;
-            AddChild(attackAnimationSprite);
+    {
+        attackAnimationSprite = new AnimationSprite("assets/TrunkAttack.png", 11, 1);
+        attackAnimationSprite.visible = false;
+        attackAnimationSprite.collider.isTrigger = true;
+        AddChild(attackAnimationSprite);
 
-            TakeDamageAnimationSprite = new AnimationSprite("assets/TrunkHit.png", 5, 1);
-            TakeDamageAnimationSprite.visible = false;
-            TakeDamageAnimationSprite.collider.isTrigger = true;
-            AddChild(TakeDamageAnimationSprite);
+        TakeDamageAnimationSprite = new AnimationSprite("assets/TrunkHit.png", 5, 1);
+        TakeDamageAnimationSprite.visible = false;
+        TakeDamageAnimationSprite.collider.isTrigger = true;
+        AddChild(TakeDamageAnimationSprite);
 
-            IdleAnimationSprite = new AnimationSprite("assets/TrunkIdle.png", 18, 1);
-            IdleAnimationSprite.visible = false;
-            IdleAnimationSprite.collider.isTrigger = true;
-            AddChild(IdleAnimationSprite);
-        }
+        IdleAnimationSprite = new AnimationSprite("assets/TrunkIdle.png", 18, 1);
+        IdleAnimationSprite.visible = false;
+        IdleAnimationSprite.collider.isTrigger = true;
+        AddChild(IdleAnimationSprite);
+    }
+    public void Update()
+    {
+        Move();
+        Animation();
+    }
 
     public override void Kill()
     {
@@ -32,10 +38,10 @@ using System.Reflection;
     public override void Animation()
     {
         base.Animation();
-        if(counter >= 6)
+        if (counter >= animationSpeed)
         {
             counter = 0;
-            if(frame >= currentAnimation.frameCount)
+            if (frame >= currentAnimation.frameCount)
             {
                 frame = 0;
             }
@@ -45,5 +51,5 @@ using System.Reflection;
         counter++;
     }
 
-    
+
 }
