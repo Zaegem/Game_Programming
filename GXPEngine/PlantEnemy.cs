@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using GXPEngine;
 using GXPEngine.Core;
 internal class PlantEnemy : Enemy
 {
-    private List<Bullet> enemyBullets = new List<Bullet>();
-
     private int shootFrame = 5;
     private int animationSpeed = 8;
     private int offSetY = 11;

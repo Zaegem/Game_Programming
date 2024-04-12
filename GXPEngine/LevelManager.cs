@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Runtime.CompilerServices;
 using GXPEngine.Core;
-using Rectangle = GXPEngine.Core.Rectangle;
 
 namespace GXPEngine
 {
