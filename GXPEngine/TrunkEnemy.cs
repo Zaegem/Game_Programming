@@ -1,21 +1,18 @@
 ﻿using GXPEngine;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
+using GXPEngine.Core;
+using System.Drawing;
 
 internal class TrunkEnemy : Enemy
 {
-    private List<Bullet> enemyBullets = new List<Bullet>();
-
-    private int counter;
-    private int frame;
+    private int shootFrame = 8;
     private int animationSpeed = 6;
-    private int bulletSpeed = -2;
     private int offSetY = 12;
     private int offSetX = -2;
 
-    private bool hasShot = false;
-    public TrunkEnemy(Vec2 position) : base(position)
+    private int width = 20;
+    private int height = 21;
+
+    public TrunkEnemy(Vec2 position, float health) : base(position, health)
     {
         attackAnimationSprite = new AnimationSprite("assets/TrunkAttack.png", 11, 1);
         attackAnimationSprite.visible = false;
@@ -44,48 +41,28 @@ internal class TrunkEnemy : Enemy
 
     }
 
-    public override void SpawnBullet(float x, float y)
+    public override int GetShootFrame()
     {
-        if(frame == 8)
-        {
-            if(!hasShot)
-            {
-                Bullet bullet = new Bullet(new Sprite("assets/TrunkBullet.png", true, false), bulletSpeed);
-                bullet.SetXY(x, y);
-
-                bullet.OnDestroyed += OnBulletDestroyed;
-
-                game.AddChild(bullet);
-                enemyBullets.Add(bullet);
-                hasShot = true;
-            }
-        } else
-        {
-            hasShot = false;
-        }
+        return shootFrame;
     }
 
-    private void OnBulletDestroyed(Bullet bullet)
+    public override float GetAnimationSpeed()
     {
-        bullet.OnDestroyed -= OnBulletDestroyed;
-        enemyBullets.Remove(bullet);
+        return animationSpeed;
     }
 
-    public override void Animation()
+    public override Sprite GetBulletSprite()
     {
-        base.Animation();
-        if (counter >= animationSpeed)
-        {
-            counter = 0;
-            if (frame >= currentAnimation.frameCount)
-            {
-                frame = 0;
-            }
-            currentAnimation.SetFrame(frame);
-            frame++;
-        }
-        counter++;
+        return new Sprite("assets/TrunkBullet.png", true, false);
     }
 
-
+    protected override Collider createCollider()
+    {
+        Bitmap bitmap = new Bitmap(width, height);
+        Sprite colliderSprite = new Sprite(bitmap, false);
+        AddChild(colliderSprite);
+        colliderSprite.SetXY(width / 2f, height / 2f);
+        BoxCollider boxCollider = new BoxCollider(colliderSprite);
+        return boxCollider;
+    }
 }

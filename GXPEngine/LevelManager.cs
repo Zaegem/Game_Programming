@@ -111,22 +111,22 @@ namespace GXPEngine
         }
         public void SpawnPlayer()
         {
-            player = new Player(new Vec2(160, 50));
+            player = new Player(new Vec2(160, 50), 5);
             game.AddChild(player);
 
-            Camera camera = new Camera((int)levelPosition.x, (int)levelPosition.y, 320, 240);
+            Camera camera = new Camera((int)levelPosition.x, (int)levelPosition.y, game.width, game.height);
             player.AddChild(camera);
         }
 
         public void SpawnPlantEnemy()
         {
-            plantEnemy = new PlantEnemy(new Vec2(300, 120));
+            plantEnemy = new PlantEnemy(new Vec2(300, 120), 3);
             game.AddChild(plantEnemy);
         }
 
         public void SpawnTrunkEnemy()
         {
-            trunkEnemy = new TrunkEnemy(new Vec2(420, 95));
+            trunkEnemy = new TrunkEnemy(new Vec2(420, 95), 4);
             game.AddChild(trunkEnemy);
         }
 

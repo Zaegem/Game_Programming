@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using GXPEngine.Core;
 using GXPEngine;
+using System.Drawing;
 public enum PlayerState
 {
     IdleRight,
@@ -22,10 +23,13 @@ class Player : GameObject
     int frame;
     private int offSet = 10;
 
+    private float health;
     private float speed = 320;
     private float jumpForce = 8;
     private float drag = 0.05f;
     private float characterMass = 40f;
+    private int width = 32;
+    private int height = 32;
 
     private Vec2 gravity = new Vec2(0, 9.81f);
     private Vec2 velocity;
@@ -45,13 +49,14 @@ class Player : GameObject
     AnimationSprite takingDamageRightAnimationSprite = new AnimationSprite("assets/HitRight.png", 7, 1);
     AnimationSprite takingDamageLeftAnimationSprite = new AnimationSprite("assets/HitLeft.png", 7, 1);
 
-    public PlayerState playerState; 
-     
+    public PlayerState playerState;
+
 
     private List<Bullet> bullets = new List<Bullet>();
 
-    public Player(Vec2 position) : base(true)
+    public Player(Vec2 position, float health) : base(true)
     {
+        this.health = health;
         x = position.x;
         y = position.y;
 
@@ -100,12 +105,23 @@ class Player : GameObject
         SpawnBullet(x + offSet, y + offSet);
     }
 
-    void SpawnBullet(float x, float y)
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        playerState = isLookingLeft ? PlayerState.TakingDamageLeft : PlayerState.TakingDamageRight;
+
+        if (health <= 0f)
+        {
+            // player is dead
+            LateDestroy();
+        }
+    }
+    private void SpawnBullet(float x, float y)
     {
         if(Input.GetKeyUp(Key.SPACE))
         {
             float bulletSpeed = isLookingLeft ? -2 : 2;
-            Bullet bullet = new Bullet(new Sprite("assets/Bullet.png", true, false), bulletSpeed);
+            Bullet bullet = new Bullet(new Sprite("assets/Bullet.png", true, false), bulletSpeed, BulletFaction.Player);
             bullet.SetXY(x, y);
 
             bullet.OnDestroyed += OnBulletDestroyed;
@@ -123,8 +139,10 @@ class Player : GameObject
 
     protected override Collider createCollider()
     {
-        BoxCollider boxCollider = new BoxCollider(idleRightAnimationSprite);
-        boxCollider.isTrigger = true;
+        Bitmap bitmap = new Bitmap(width, height);
+        Sprite colliderSprite = new Sprite(bitmap, false);
+        AddChild(colliderSprite);
+        BoxCollider boxCollider = new BoxCollider(colliderSprite);
         return boxCollider;
     }
 
@@ -133,22 +151,20 @@ class Player : GameObject
         if(!isFalling && Input.GetKeyDown(Key.W))
         {
             velocity += new Vec2(0, -1) * jumpForce;
-            if (isLookingLeft)
+            if(isLookingLeft)
             {
                 playerState = PlayerState.JumpLeft;
-            }
-            else
+            } else
             {
                 playerState = PlayerState.JumpRight;
             }
-            
+
         }
 
         Vec2 direction = new Vec2(0, 0);
         if(Input.GetKey(Key.A))
         {
             direction += new Vec2(-1, 0);
-            if(!Input.GetKeyDown(Key.W)) 
             playerState = PlayerState.MovingLeft;
             isLookingLeft = true;
         }

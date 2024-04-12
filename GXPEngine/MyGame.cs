@@ -15,9 +15,8 @@ public class MyGame : Game
         return game;
     }
 
-    public MyGame() : base(320, 240, false, false, 980, 720, true)
+    public MyGame() : base(640, 480, false, false, 1024, 768, true)
     {
-        EasyDraw canvas = new EasyDraw(800, 600);
         levelManager = new LevelManager(this);
         levelManager.CreateLevel();
         levelManager.SpawnPlayer();

@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq.Expressions;
 using GXPEngine;
 using GXPEngine.Core;
 internal class PlantEnemy : Enemy
 {
     private List<Bullet> enemyBullets = new List<Bullet>();
 
-    private int counter;
-    private int frame;
+    private int shootFrame = 5;
     private int animationSpeed = 8;
-    private int bulletSpeed = -2;
-    private int offSetY = 10;
+    private int offSetY = 11;
     private int offSetX = -8;
 
-    private int width = 44;
-    private int height = 42;
+    private int width = 16;
+    private int height = 21;
 
-    private bool hasShot = false;
-
-    public PlantEnemy(Vec2 position) : base(position)
+    public PlantEnemy(Vec2 position, float health) : base(position, health)
     {
         attackAnimationSprite = new AnimationSprite("assets/PlantAttack.png", 8, 1);
         attackAnimationSprite.visible = false;
@@ -39,7 +33,6 @@ internal class PlantEnemy : Enemy
         AddChild(IdleAnimationSprite);
     }
 
-
     public void Update()
     {
         Move();
@@ -49,59 +42,30 @@ internal class PlantEnemy : Enemy
 
     public override void Kill()
     {
+        LateDestroy();
     }
 
-    public override void SpawnBullet(float x, float y)
+    public override int GetShootFrame()
     {
-        if(frame == 5)
-        {
-            if(!hasShot)
-            {
-                Bullet bullet = new Bullet(new Sprite("assets/PlantBullet.png", true, false), bulletSpeed);
-                bullet.SetXY(x, y);
-
-                bullet.OnDestroyed += OnBulletDestroyed;
-
-                game.AddChild(bullet);
-                enemyBullets.Add(bullet);
-                hasShot = true;
-            }
-        } else
-        {
-            hasShot = false;
-        }
+        return shootFrame;
     }
 
-    private void OnBulletDestroyed(Bullet bullet)
+    public override float GetAnimationSpeed()
     {
-        bullet.OnDestroyed -= OnBulletDestroyed;
-        enemyBullets.Remove(bullet);
+        return animationSpeed;
     }
 
-    public override void Animation()
+    public override Sprite GetBulletSprite()
     {
-        base.Animation();
-        if(counter >= animationSpeed)
-        {
-            counter = 0;
-            if(frame >= currentAnimation.frameCount)
-            {
-                frame = 0;
-            }
-            currentAnimation.SetFrame(frame);
-            frame++;
-        }
-        counter++;
+        return new Sprite("assets/PlantBullet.png", true, false);
     }
 
     protected override Collider createCollider()
     {
-        float desiredWidth = width / 2f;
-        float desiredHeight = height / 2f;
-        Bitmap bitmap = new Bitmap((int)desiredWidth, (int)desiredHeight);
+        Bitmap bitmap = new Bitmap(width, height);
         Sprite colliderSprite = new Sprite(bitmap, false);
         AddChild(colliderSprite);
-        colliderSprite.SetXY(desiredWidth / 2f, desiredHeight / 2f);
+        colliderSprite.SetXY(width / 2f, height / 2f);
         BoxCollider boxCollider = new BoxCollider(colliderSprite);
         return boxCollider;
     }
