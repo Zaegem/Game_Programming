@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using GXPEngine;
+using GXPEngine.Core;
 
 public enum EnemyState
 {
@@ -61,6 +63,8 @@ internal abstract class Enemy : GameObject
     public abstract int GetShootFrame();
     public abstract float GetAnimationSpeed();
     public abstract Sprite GetBulletSprite();
+    public abstract int GetColliderWidth();
+    public abstract int GetColliderHeight();
 
     public virtual void SpawnBullet(float x, float y)
     {
@@ -128,5 +132,15 @@ internal abstract class Enemy : GameObject
     {
         bullet.OnDestroyed -= OnBulletDestroyed;
         enemyBullets.Remove(bullet);
+    }
+
+    protected override Collider createCollider()
+    {
+        Bitmap bitmap = new Bitmap(GetColliderWidth(), GetColliderHeight());
+        Sprite colliderSprite = new Sprite(bitmap, false);
+        AddChild(colliderSprite);
+        colliderSprite.SetXY(GetColliderWidth() / 2f, GetColliderHeight() / 2f);
+        BoxCollider boxCollider = new BoxCollider(colliderSprite);
+        return boxCollider;
     }
 }

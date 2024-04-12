@@ -56,14 +56,13 @@ internal class PlantEnemy : Enemy
     {
         return new Sprite("assets/PlantBullet.png", true, false);
     }
-
-    protected override Collider createCollider()
+    public override int GetColliderWidth()
     {
-        Bitmap bitmap = new Bitmap(width, height);
-        Sprite colliderSprite = new Sprite(bitmap, false);
-        AddChild(colliderSprite);
-        colliderSprite.SetXY(width / 2f, height / 2f);
-        BoxCollider boxCollider = new BoxCollider(colliderSprite);
-        return boxCollider;
+        return width;
+    }
+
+    public override int GetColliderHeight()
+    {
+        return height;
     }
 }
