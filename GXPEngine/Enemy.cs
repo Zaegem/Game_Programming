@@ -12,6 +12,8 @@ public enum EnemyState
 }
 internal abstract class Enemy : GameObject
 {
+    public event Action<Enemy> OnDeathEvent;
+
     private List<Bullet> enemyBullets = new List<Bullet>();
 
     protected float health;
@@ -38,9 +40,10 @@ internal abstract class Enemy : GameObject
         enemyState = EnemyState.Attack;
     }
 
-    public virtual void Kill()
+    public void Kill()
     {
         LateDestroy();
+        OnDeathEvent?.Invoke(this);
     }
 
     public virtual void TakeDamage(float damage)

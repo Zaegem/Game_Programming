@@ -36,11 +36,6 @@ internal class TrunkEnemy : Enemy
         SpawnBullet(x + offSetX, y + offSetY);
     }
 
-    public override void Kill()
-    {
-
-    }
-
     public override int GetShootFrame()
     {
         return shootFrame;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Runtime.InteropServices;
 using GXPEngine.Core;
 using GXPEngine;
@@ -110,7 +111,7 @@ class Player : GameObject
         health -= damage;
         playerState = isLookingLeft ? PlayerState.TakingDamageLeft : PlayerState.TakingDamageRight;
 
-        if (health <= 0f)
+        if(health <= 0f)
         {
             // player is dead
             LateDestroy();

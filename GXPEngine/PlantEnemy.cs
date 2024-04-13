@@ -37,11 +37,6 @@ internal class PlantEnemy : Enemy
         SpawnBullet(x + offSetX, y + offSetY);
     }
 
-    public override void Kill()
-    {
-        LateDestroy();
-    }
-
     public override int GetShootFrame()
     {
         return shootFrame;
