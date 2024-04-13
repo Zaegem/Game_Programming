@@ -32,7 +32,7 @@ class Bullet : GameObject
 
     void Update()
     {
-        Move();
+        MoveAndCollision();
     }
 
     protected override Collider createCollider()
@@ -45,7 +45,7 @@ class Bullet : GameObject
         return boxCollider;
     }
 
-    void Move()
+    void MoveAndCollision()
     {
         Collision collision = MoveUntilCollision(bulletSpeed, 0f);
 
@@ -53,7 +53,7 @@ class Bullet : GameObject
         {
             if (collision.other is Player player && faction == BulletFaction.Enemy)
             {
-                player.TakeDamage(bulletDamage);
+                //player.TakeDamage(bulletDamage);
             }
 
             if (collision.other is Enemy enemy && faction == BulletFaction.Player)

@@ -40,15 +40,20 @@ internal abstract class Enemy : GameObject
 
     public virtual void Kill()
     {
-        // trigger death animation
-        // wait for it to end
-        // then call LateDestroy();
         LateDestroy();
     }
 
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
+        enemyState = EnemyState.TakeDamage;
+        
+
+        if (currentAnimation.frameCount ==  5 && enemyState == EnemyState.TakeDamage)
+        {
+            enemyState = EnemyState.Attack;
+            frame = 0;
+        }
 
         if (health <= 0f)
         {
