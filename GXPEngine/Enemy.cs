@@ -50,13 +50,6 @@ internal abstract class Enemy : GameObject
     {
         health -= damage;
         enemyState = EnemyState.TakeDamage;
-        
-
-        if (currentAnimation.frameCount ==  5 && enemyState == EnemyState.TakeDamage)
-        {
-            enemyState = EnemyState.Attack;
-            frame = 0;
-        }
 
         if (health <= 0f)
         {
@@ -128,6 +121,7 @@ internal abstract class Enemy : GameObject
             counter = 0;
             if(frame >= currentAnimation.frameCount)
             {
+                enemyState = EnemyState.Attack;
                 frame = 0;
             }
             currentAnimation.SetFrame(frame);

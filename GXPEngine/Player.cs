@@ -113,7 +113,6 @@ class Player : GameObject
 
         if(health <= 0f)
         {
-            // player is dead
             LateDestroy();
         }
     }
