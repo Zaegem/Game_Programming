@@ -53,7 +53,7 @@ class Bullet : GameObject
         {
             if (collision.other is Player player && faction == BulletFaction.Enemy)
             {
-                //player.TakeDamage(bulletDamage);
+                player.TakeDamage(bulletDamage);
             }
 
             if (collision.other is Enemy enemy && faction == BulletFaction.Player)

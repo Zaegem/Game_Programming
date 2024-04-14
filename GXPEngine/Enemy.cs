@@ -43,12 +43,14 @@ internal abstract class Enemy : GameObject
     public void Kill()
     {
         LateDestroy();
+        SoundManager.EnemyDeath.play(0.5f, 0);
         OnDeathEvent?.Invoke(this);
     }
 
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
+        SoundManager.EnemyTakingDamage.play(0.5f, 0);
         enemyState = EnemyState.TakeDamage;
 
         if (health <= 0f)

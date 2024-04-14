@@ -109,6 +109,7 @@ class Player : GameObject
     public void TakeDamage(float damage)
     {
         health -= damage;
+        SoundManager.PlayerTakeDamage.play(0.5f, 0);
         playerState = isLookingLeft ? PlayerState.TakingDamageLeft : PlayerState.TakingDamageRight;
 
         if(health <= 0f)
@@ -128,6 +129,7 @@ class Player : GameObject
 
             game.AddChild(bullet);
             bullets.Add(bullet);
+            SoundManager.PlayerShoot.play(0.5f, 0);
         }
     }
 
@@ -256,6 +258,7 @@ class Player : GameObject
             counter = 0;
             if(frame >= currentAnimation.frameCount)
             {
+                playerState = isLookingLeft ? PlayerState.IdleLeft : PlayerState.IdleRight;
                 frame = 0;
             }
             currentAnimation.SetFrame(frame);
