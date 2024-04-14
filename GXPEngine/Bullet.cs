@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Drawing;
 using GXPEngine;
 using GXPEngine.Core;
@@ -47,10 +48,12 @@ class Bullet : GameObject
 
     void MoveAndCollision()
     {
+        
         Collision collision = MoveUntilCollision(bulletSpeed, 0f);
 
         if (collision != null)
         {
+            //Checking the collision and the faction of the bullet 
             if (collision.other is Player player && faction == BulletFaction.Enemy)
             {
                 player.TakeDamage(bulletDamage);

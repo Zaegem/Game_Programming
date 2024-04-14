@@ -43,7 +43,7 @@ internal abstract class Enemy : GameObject
     public void Kill()
     {
         LateDestroy();
-        SoundManager.EnemyDeath.play(0.5f, 0);
+        SoundManager.EnemyDeath.play(3, 0);
         OnDeathEvent?.Invoke(this);
     }
 
@@ -59,10 +59,6 @@ internal abstract class Enemy : GameObject
         }
     }
 
-    public virtual void Move()
-    {
-
-    }
     public abstract int GetShootFrame();
     public abstract float GetAnimationSpeed();
     public abstract Sprite GetBulletSprite();

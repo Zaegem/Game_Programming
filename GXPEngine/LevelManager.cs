@@ -118,6 +118,9 @@ namespace GXPEngine
         private int[] level3WalkableBlocks = new int[] { 9, 19, 20, 109, 110, 219 };
 
         private int tileSize = 18;
+        private int playerHealth = 10;
+        private float timer = 0;
+        private float musicLoopNumber = 16.5f;
         private List<Sprite> tiles = new List<Sprite>();
         private List<Sprite> levelSprites = new List<Sprite>();
 
@@ -189,6 +192,8 @@ namespace GXPEngine
 
         public void Update()
         {
+            BackgroundMusic();
+
             if(Input.GetKeyDown(Key.ONE))
             {
                 ChangeLevel(LevelType.Level1);
@@ -301,7 +306,7 @@ namespace GXPEngine
 
         public void SpawnPlayer()
         {
-            player = new Player(new Vec2(160, 50), 10);
+            player = new Player(new Vec2(160, 50), playerHealth);
             game.AddChild(player);
 
             Camera camera = new Camera(0, 0, game.width, game.height);
@@ -332,6 +337,7 @@ namespace GXPEngine
             if(spawnedEnemies.Count == 0)
             {
                 LevelType nextLevel = currentLevel + 1;
+                playerHealth = 10;
                 if(nextLevel > LevelType.Level3)
                 {
                     Sprite thanksForPlayingSprite = new Sprite("assets/ThanksForPlaying.png");
@@ -342,6 +348,18 @@ namespace GXPEngine
                 }
 
                 ChangeLevel(nextLevel);
+            }
+        }
+
+        private void BackgroundMusic()
+        {
+            float deltaTime = Time.deltaTime / 2000f;
+            timer -= deltaTime;
+
+            if (timer <= 0)
+            {
+                SoundManager.BackGroundMusic.play(0.2f, 0);
+                timer = musicLoopNumber;
             }
         }
     }

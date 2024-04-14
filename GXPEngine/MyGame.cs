@@ -20,7 +20,6 @@ public class MyGame : Game
         levelManager = new LevelManager(this);
         levelManager.SpawnPlayer();
         levelManager.ChangeLevel(LevelType.Level1);
-        SoundManager.BackGroundMusic.play(0.1f, 0);
     }
 
     void Update()
