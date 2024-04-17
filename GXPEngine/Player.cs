@@ -122,9 +122,11 @@ class Player : GameObject
         if(Input.GetKeyUp(Key.SPACE))
         {
             float bulletSpeed = isLookingLeft ? -2 : 2;
+            float bulletOffset = isLookingLeft ? -5 : 5;
             Bullet bullet = new Bullet(new Sprite("assets/Bullet.png", true, false), bulletSpeed, BulletFaction.Player);
-            bullet.SetXY(x, y);
+            bullet.SetXY(x + bulletOffset, y);
 
+            // subscribe to when bullet is destroyed to remove it from bullets
             bullet.OnDestroyed += OnBulletDestroyed;
 
             game.AddChild(bullet);

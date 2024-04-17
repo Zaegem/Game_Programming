@@ -44,7 +44,12 @@ internal abstract class Enemy : GameObject
     {
         LateDestroy();
         SoundManager.EnemyDeath.play(3, 0);
-        OnDeathEvent?.Invoke(this);
+
+        // if OnDeathEvent is not null, it has subscribers
+        if (OnDeathEvent != null)
+        {
+            OnDeathEvent.Invoke(this);
+        }
     }
 
     public virtual void TakeDamage(float damage)

@@ -38,6 +38,7 @@ class Bullet : GameObject
 
     protected override Collider createCollider()
     {
+        //Creating a new collider for the bullet
         Bitmap bitmap = new Bitmap(radius, radius);
         Sprite colliderSprite = new Sprite(bitmap, false);
         AddChild(colliderSprite);
@@ -48,25 +49,26 @@ class Bullet : GameObject
 
     void MoveAndCollision()
     {
-        
         Collision collision = MoveUntilCollision(bulletSpeed, 0f);
 
-        if (collision != null)
+        if(collision != null)
         {
-            //Checking the collision and the faction of the bullet 
-            if (collision.other is Player player && faction == BulletFaction.Enemy)
+            // if other game object is Player and if our faction is Enemy, we damage the player
+            if(collision.other is Player player && faction == BulletFaction.Enemy)
             {
                 player.TakeDamage(bulletDamage);
             }
 
-            if (collision.other is Enemy enemy && faction == BulletFaction.Player)
+            // if other game object is Enemy and if our faction is Player, we damage the enemy
+            if(collision.other is Enemy enemy && faction == BulletFaction.Player)
             {
                 enemy.TakeDamage(bulletDamage);
             }
 
             LateDestroy();
 
-            if (OnDestroyed != null)
+            // if OnDestroyed is not null, it has subscribers
+            if(OnDestroyed != null)
             {
                 OnDestroyed.Invoke(this);
             }

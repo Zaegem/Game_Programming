@@ -24,9 +24,9 @@ public class MyGame : Game
 
     void Update()
     {
-        levelManager.Update();
 
     }
+
     static void Main()
     {
         new MyGame().Start();

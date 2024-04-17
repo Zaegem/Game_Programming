@@ -31,7 +31,6 @@ internal class TrunkEnemy : Enemy
     }
     public void Update()
     {
-        Move();
         Animation();
         SpawnBullet(x + offSetX, y + offSetY);
     }

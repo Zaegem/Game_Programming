@@ -140,6 +140,7 @@ namespace GXPEngine
 
             CreateTileMap();
 
+            // Level 1
             levels.Add(LevelType.Level1, new LevelData()
             {
                 level = level1,
@@ -155,6 +156,7 @@ namespace GXPEngine
                 }
             });
 
+            // Level 2
             levels.Add(LevelType.Level2, new LevelData()
             {
                 level = level2,
@@ -169,9 +171,9 @@ namespace GXPEngine
                     new Vec2(200, 256),
                     new Vec2(700, 203)
                 }
-
             });
 
+            // Level 3
             levels.Add(LevelType.Level3, new LevelData()
             {
                 level = level3,
@@ -193,7 +195,8 @@ namespace GXPEngine
         public void Update()
         {
             BackgroundMusic();
-
+            
+            // debug code
             if(Input.GetKeyDown(Key.ONE))
             {
                 ChangeLevel(LevelType.Level1);
@@ -212,6 +215,7 @@ namespace GXPEngine
 
         public void ChangeLevel(LevelType levelType)
         {
+            // destroy spawned enemies
             for(int i = 0; i < spawnedEnemies.Count; i++)
             {
                 Enemy enemy = spawnedEnemies[i];
@@ -222,6 +226,7 @@ namespace GXPEngine
 
             spawnedEnemies.Clear();
 
+            // destroy current level sprites
             for(int i = 0; i < levelSprites.Count; i++)
             {
                 Sprite sprite = levelSprites[i];
@@ -231,6 +236,7 @@ namespace GXPEngine
 
             levelSprites.Clear();
 
+            // create next level sprites
             LevelData levelData = levels[levelType];
             for(int y = 0; y < levelData.level.GetLength(0); y++)
             {
@@ -254,18 +260,21 @@ namespace GXPEngine
                 }
             }
 
+            // spawn all plants
             for(int i = 0; i < levelData.plantSpawnPositions.Length; i++)
             {
                 Vec2 spawnPosition = levelData.plantSpawnPositions[i];
                 SpawnPlantEnemy(spawnPosition);
             }
 
+            // spawn all trunks
             for(int i = 0; i < levelData.trunkSpawnPositions.Length; i++)
             {
                 Vec2 spawnPosition = levelData.trunkSpawnPositions[i];
                 SpawnTrunkEnemy(spawnPosition);
             }
 
+            // move player to spawn point
             player.SetXY(levelData.playerSpawnPosition.x, levelData.playerSpawnPosition.y);
 
             currentLevel = levelType;
@@ -273,6 +282,7 @@ namespace GXPEngine
 
         private void CreateTileMap()
         {
+            // create the tile map to draw the sprites by id
             Sprite blankSprite = new Sprite(new Bitmap(tileSize, tileSize));
             tiles.Add(blankSprite);
 
@@ -316,6 +326,7 @@ namespace GXPEngine
         public void SpawnPlantEnemy(Vec2 spawnPosition)
         {
             PlantEnemy plantEnemy = new PlantEnemy(spawnPosition, 3);
+            // subscribe to death event, to remove from spawnedEnemies list
             plantEnemy.OnDeathEvent += OnEnemyDeath;
             game.AddChild(plantEnemy);
             spawnedEnemies.Add(plantEnemy);
@@ -324,6 +335,7 @@ namespace GXPEngine
         public void SpawnTrunkEnemy(Vec2 spawnPosition)
         {
             TrunkEnemy trunkEnemy = new TrunkEnemy(spawnPosition, 4);
+            // subscribe to death event, to remove from spawnedEnemies list
             trunkEnemy.OnDeathEvent += OnEnemyDeath;
             game.AddChild(trunkEnemy);
             spawnedEnemies.Add(trunkEnemy);
@@ -334,10 +346,13 @@ namespace GXPEngine
             enemy.OnDeathEvent -= OnEnemyDeath;
             spawnedEnemies.Remove(enemy);
 
+            // check if all enemies died, if so - the level is completed
             if(spawnedEnemies.Count == 0)
             {
                 LevelType nextLevel = currentLevel + 1;
                 playerHealth = 10;
+
+                // if the player beat the last level, show ending screen
                 if(nextLevel > LevelType.Level3)
                 {
                     Sprite thanksForPlayingSprite = new Sprite("assets/ThanksForPlaying.png");
@@ -353,10 +368,9 @@ namespace GXPEngine
 
         private void BackgroundMusic()
         {
-            float deltaTime = Time.deltaTime / 2000f;
-            timer -= deltaTime;
+            timer -= Time.deltaTimeSeconds;
 
-            if (timer <= 0)
+            if(timer <= 0)
             {
                 SoundManager.BackGroundMusic.play(0.2f, 0);
                 timer = musicLoopNumber;
