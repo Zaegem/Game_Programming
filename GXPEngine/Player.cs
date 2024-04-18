@@ -183,16 +183,14 @@ class Player : GameObject
         Vec2 acceleration = direction * speed * Time.deltaTimeSeconds;
         velocity = velocity * (1f - drag) + acceleration * drag;
 
-        Collision collision = MoveUntilCollision(velocity.x, velocity.y);
+         MoveUntilCollision(velocity.x, 0);
+        Collision collision = MoveUntilCollision(0, velocity.y);
         isFalling = collision == null;
 
         if(isFalling)
         {
             velocity += gravity * drag * characterMass * Time.deltaTimeSeconds;
-        } else
-        {
-            velocity.y = 0;
-        }
+        } 
 
         if(velocity.Length() <= 0.3f)
         {
