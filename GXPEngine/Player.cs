@@ -38,6 +38,7 @@ class Player : GameObject
 
     private bool isFalling = true;
     private bool isLookingLeft = false;
+    private bool isAlive = true;
 
     Sprite healthBar = new Sprite("assets/HealthBar.png");
     Sprite healthBarFrame = new Sprite("assets/HealthBarFrame.png");
@@ -59,7 +60,7 @@ class Player : GameObject
 
     private List<Bullet> bullets = new List<Bullet>();
 
-    public Player(Vec2 position, float health) : base(true)
+    public Player(Vec2 position, float health = 10) : base(true)
     {
         this.health = health;
         this.maxHealth = health;
@@ -129,6 +130,7 @@ class Player : GameObject
         healthBar.scaleY = 0.20f;
 
         healthBar.SetXY(this.x + offSetX + 4, this.y - offSetY + 3);
+
     }
 
     public void TakeDamage(float damage)
@@ -139,6 +141,8 @@ class Player : GameObject
 
         if(health <= 0f)
         {
+            healthBar.visible = false;
+            healthBarFrame.visible = false;
             LateDestroy();
         }
     }

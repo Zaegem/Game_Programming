@@ -316,7 +316,7 @@ namespace GXPEngine
 
         public void SpawnPlayer()
         {
-            player = new Player(new Vec2(160, 50), playerHealth);
+            player = new Player(new Vec2(160, 50));
             game.AddChild(player);
 
             Camera camera = new Camera(0, 0, game.width, game.height);
