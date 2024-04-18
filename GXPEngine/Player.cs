@@ -23,8 +23,9 @@ class Player : GameObject
     int counter;
     int frame;
     private int offSet = 10;
-
     private float health;
+    private float maxHealth;
+
     private float speed = 320;
     private float jumpForce = 8;
     private float drag = 0.05f;
@@ -37,6 +38,9 @@ class Player : GameObject
 
     private bool isFalling = true;
     private bool isLookingLeft = false;
+
+    Sprite healthBar = new Sprite("assets/HealthBar.png");
+    Sprite healthBarFrame = new Sprite("assets/HealthBarFrame.png");
 
     AnimationSprite currentAnimation;
     AnimationSprite idleRightAnimationSprite = new AnimationSprite("assets/idleRight.png", 11, 1);
@@ -58,6 +62,8 @@ class Player : GameObject
     public Player(Vec2 position, float health) : base(true)
     {
         this.health = health;
+        this.maxHealth = health;
+
         x = position.x;
         y = position.y;
 
@@ -97,6 +103,9 @@ class Player : GameObject
         fallLeftAnimationSprite.visible = false;
         fallLeftAnimationSprite.collider.isTrigger = true;
         AddChild(fallLeftAnimationSprite);
+
+        healthBarFrame.collider.isTrigger = true;
+        healthBar.collider.isTrigger = true;
     }
 
     void Update()
@@ -104,6 +113,22 @@ class Player : GameObject
         Movement();
         Animation();
         SpawnBullet(x + offSet, y + offSet);
+        renderHealthBar(-230, 160);
+    }
+
+    public void renderHealthBar(int offSetX, int offSetY)
+    {
+        if (!this.game.HasChild(healthBarFrame)) { this.game.AddChild(healthBarFrame); }
+        if (!this.game.HasChild(healthBar)) { this.game.AddChild(healthBar); }
+
+        healthBarFrame.scale = 0.20f;
+        healthBarFrame.SetXY(this.x + offSetX, this.y - offSetY);
+
+        float healthFraction = health / maxHealth;
+        healthBar.scaleX = Mathf.Max(0f, healthFraction * 0.2f);
+        healthBar.scaleY = 0.20f;
+
+        healthBar.SetXY(this.x + offSetX + 4, this.y - offSetY + 3);
     }
 
     public void TakeDamage(float damage)
